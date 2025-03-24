@@ -1,0 +1,10 @@
+# Ignorer les dossiers de compilation
+test-bdd-orm/obj/
+test-bdd-orm/bin/
+
+# Ignorer les fichiers SQLite
+test-bdd-orm/**/*.sqlite
+
+# Ignorer les fichiers spécifiques à macOS
+test-bdd-orm/.DS_Store
+.DS_Store
