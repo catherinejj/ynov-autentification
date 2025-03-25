@@ -11,6 +11,8 @@ namespace EntityFramework
         [Required]
         [MaxLength(120)]
         public required string Name { get; set; }
+        [Required]
+        public required string Email { get; set; }
 
         public required ICollection<Post> Posts { get; set; } = new List<Post>();
     }

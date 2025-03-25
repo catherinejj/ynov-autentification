@@ -1,0 +1,9 @@
+<h2>Utilisateur actuel</h2>
+
+@if (user) {
+  <p><strong>ID :</strong> {{ user.id }}</p>
+  <p><strong>Nom :</strong> {{ user.name }}</p>
+  <p><strong>Email :</strong> {{ user.email }}</p>
+} @else {
+  <p>Aucun utilisateur trouvé.</p>
+}

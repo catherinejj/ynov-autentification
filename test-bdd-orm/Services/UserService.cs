@@ -1,29 +1,47 @@
+//public class UserService (UserDataAccess _dataAccess ): IUserService
 using EntityFramework;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Services
 {
-    /*public class UserService
+    public class UserService : IUserService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserDataAccess _dataAccess;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(IUserDataAccess dataAccess)
         {
-            _context = context;
+            _dataAccess = dataAccess;
         }
-        //est censé inserer des utilisateur sauf que ça n'a pas fonctionné meme après avoir créait en dure une boucle 
-        //pour inserer des utilisateur donc j'ai fait une requete dans la console via sqlite
-       public async Task<EntityFramework.User> AddUserAsync(EntityFramework.User user)
+
+        public async Task HandleSuccessfulSignin(IEnumerable<Claim> claims)
         {
-            _context.Users.Add(user); 
-            await _context.SaveChangesAsync();
-            return user;
+            var emailClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+            var nameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+
+            if (emailClaim != null && nameClaim != null)
+            {
+                var user = await _dataAccess.FindByEmail(emailClaim.Value);
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        Name = nameClaim.Value,
+                        Email = emailClaim.Value,
+                        Posts = new List<Post>()
+                    };
+                    await _dataAccess.Save(user);
+                }
+            }
         }
-        //affiche les gens
-        public async Task<List<User>> GetAllUsersAsync(){
-                return await _context.Users.ToListAsync();
+
+        public async Task<User?> GetCurrent(IEnumerable<Claim> claims)
+        {
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+            if (email != null)
+            {
+                return await _dataAccess.FindByEmail(email.Value);
+            }
+            return null;
         }
-        
-    }*/
+    }
 }
