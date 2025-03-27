@@ -1,13 +1,7 @@
 import { HttpInterceptor, HttpInterceptorFn } from "@angular/common/http";
-/*export const cookieInterceptor: HttpInterceptorFn = (request,next)=> {
-  const newRequest = request.clone({
-      withCredentials:true,
-  })
-  return next(newRequest);
-}*/
 
 export const cookieInterceptor: HttpInterceptorFn = (request, next) => {
-  if (request.url.startsWith('https://localhost:5000/')) {
+  if (request.url.startsWith('https://localhost:5000')) {
     const newRequest = request.clone({
       withCredentials: true,
     });

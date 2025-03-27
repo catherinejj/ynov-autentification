@@ -1,0 +1,37 @@
+<form (ngSubmit)="handleSubmit($event)" #formConnexion="ngForm">
+  <fieldset>
+    <label for="name">Name</label>
+    <input
+      [(ngModel)]="user.name"
+      type="text"
+      name="name"
+      id="name"
+      required
+      #nameInput="ngModel"
+    />
+    @if(nameInput.errors && (nameInput.touched || nameInput.dirty)) {
+
+      <p class="error">le champ est obligatoire</p>
+    }
+    <label for="pwd">Mot de passe</label>
+    <input
+      [(ngModel)]="user.pwd"
+      type="password"
+      name="pwd"
+      id="pwd"
+      required
+      #pwdInput="ngModel"
+    />
+    @if (pwdInput.errors && (pwdInput.touched || pwdInput.dirty)) {
+      <p class="error">
+        @if (pwdInput.errors['required']) {
+          Le mot de passe est obligatoire.
+        }
+      </p>
+    }
+
+    <button type="submit" [disabled]="formConnexion.valid">Valider</button>
+  </fieldset>
+</form>
+
+

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserinfoService } from '../../business/services/userinfo.service'; // 😅 ok, on ne juge pas
+import { UserinfoService } from '../../business/services/userinfo.service';
 import { UserInfo } from '../../business/models/userinfo.model';
 
 @Component({
@@ -8,7 +8,7 @@ import { UserInfo } from '../../business/models/userinfo.model';
   standalone: true
 })
 export class UserinfoTestComponent implements OnInit {
-  public user: UserInfo | null = null; // ✅ correspond à @if (user)
+  public user: UserInfo | null = null;
 
   constructor(private userinfoService: UserinfoService) {}
 

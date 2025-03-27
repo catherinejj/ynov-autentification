@@ -10,7 +10,7 @@ export class UserinfoService {
   getCurrent() {
     throw new Error('Method not implemented.');
   }
-  private readonly baseUrl = 'http://localhost:5001/auth/userinfo';
+  private readonly baseUrl = 'https://localhost:5000/auth/userinfo';
 
   constructor(
     private readonly client: HttpClient,
@@ -27,4 +27,5 @@ export class UserinfoService {
       map(data => this.userinfoMapper.fromDto(data))
     );
   }
+
 }

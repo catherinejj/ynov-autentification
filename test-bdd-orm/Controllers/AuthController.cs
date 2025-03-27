@@ -1,32 +1,30 @@
 using AspNet.Security.OAuth.GitHub;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Services;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using System.ComponentModel.DataAnnotations;
+using System.Net;
 using EntityFramework;
+using Services;
 
-namespace YourNamespace.Controllers
+namespace Ynov.QuizYnov.Controllers
 {
-    [ApiController]
     [Route("auth")]
-    public class AuthController : ControllerBase
+    [ApiController]
+    public class AuthController(IUserService _userService ,IConfiguration _configuration) : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public AuthController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         [HttpGet("signin")]
-        public IActionResult SignIn()
+        [ProducesResponseType<User>(302)]
+        public IActionResult SignIn([FromQuery] string redirectUri = "/auth/userinfo")
         {
+            if (!IsAllowedRedirectUri(redirectUri))
+            {
+                return BadRequest("Invalid redirect uri");
+            }
+
             var properties = new AuthenticationProperties
             {
-                RedirectUri = "/auth/callback"
+                RedirectUri = $"/auth/callback?redirectUri={WebUtility.UrlEncode(redirectUri)}"
             };
 
             return Challenge(properties, GitHubAuthenticationDefaults.AuthenticationScheme);
@@ -34,19 +32,45 @@ namespace YourNamespace.Controllers
 
         [Authorize]
         [HttpGet("callback")]
-        public async Task<IActionResult> HandleCallBack()
+        [ProducesResponseType<User>(302)]
+        public async Task<IActionResult> HandleCallback([FromQuery] string redirectUri = "/auth/userinfo")
         {
-            await _userService.HandleSuccessfulSignin(User.Claims);
-            return Ok();
+           await _userService.HandleSuccessfulSignin(User.Claims);
+            if (!IsAllowedRedirectUri(redirectUri)) {
+                return BadRequest("Invalid redirect uri");
+            }
+
+            return Redirect(WebUtility.UrlDecode(redirectUri));
         }
-        
+
         [Authorize]
         [HttpGet("userinfo")]
+        [ProducesResponseType<User>(200)]
         public async Task<IActionResult> GetUserInfo()
         {
             var user = await _userService.GetCurrent(User.Claims);
-        
+
             return Ok(user);
         }
+
+        [HttpGet("signout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Ok();
+        }
+
+      private bool IsAllowedRedirectUri(string redirectUri)
+        {
+            var allowedOrigins = _configuration.GetSection("AllowedRedirectOrigins").Get<string[]>() ?? [];
+
+            return !redirectUri.StartsWith("/") || allowedOrigins.Any(origins=>redirectUri.StartsWith(origins));
+            //return !redirectUri.Contains("/auth/signin")
+            //   .StartsWith("/") || allowedOrigins.Any(origins => redirectUri.StartsWith(origins));
+        }
+
+
     }
+
 }
+ 

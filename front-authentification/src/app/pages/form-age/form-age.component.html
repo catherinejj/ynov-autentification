@@ -1,0 +1,32 @@
+<p>form-pwd works!</p>
+
+<form [formGroup]="group">
+  <fieldset>
+    <label for="name">Name</label>
+    <input
+      formControlName="name"
+      type="text"
+      name="name"
+      id="name"
+      required
+    />
+    @if(group.controls.name.errors && (group.controls.name.touched || group.controls.name.dirty)) {
+      <p class="error">le champ est obligatoire</p>
+    }
+    <label for="pwd">Mot de passe</label>
+    <input
+      formControlName="pwd"
+      type="text"
+      name="pwd"
+      id="pwd"
+      required
+    />
+    @if(group.controls.pwd.errors && (group.controls.pwd.touched || group.controls.pwd.dirty)) {
+      <p class="error">le mot de passe est obligatoire</p>
+    }
+    <button type="submit">Envoyer</button>
+  </fieldset>
+</form>
+
+
+
