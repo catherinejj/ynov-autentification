@@ -11,18 +11,18 @@
       required
     />
     @if(group.controls.name.errors && (group.controls.name.touched || group.controls.name.dirty)) {
-      <p class="error">le champ est obligatoire</p>
+      <p class="error">&#x2716; le champ est obligatoire &#x2716;</p>
     }
     <label for="pwd">Mot de passe</label>
     <input
       formControlName="pwd"
-      type="text"
+      type="password"
       name="pwd"
       id="pwd"
       required
     />
     @if(group.controls.pwd.errors && (group.controls.pwd.touched || group.controls.pwd.dirty)) {
-      <p class="error">le mot de passe est obligatoire</p>
+      <p class="error">&#x2716; le mot de passe est obligatoire &#x2716;</p>
     }
     <button type="submit">Envoyer</button>
   </fieldset>
