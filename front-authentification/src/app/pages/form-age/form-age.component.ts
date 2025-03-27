@@ -21,7 +21,6 @@ export class FormAgeComponent {
   //constructor(private readonly builder:FormAgeComponent){}
 
   protected handleSubmit(event: SubmitEvent) {
-    event.preventDefault();
     this.group.controls.name.markAllAsTouched();
     this.group.controls.name.markAsDirty();
     this.group.controls.name.updateValueAndValidity();
